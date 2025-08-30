@@ -1,0 +1,60 @@
+# GitHub Pages 配置
+title: 语音对话模型评测平台
+description: 全面评估语音对话模型在多个维度的表现
+baseurl: ""
+url: ""
+
+# 构建设置
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# 插件
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# 包含和排除文件
+include:
+  - _pages
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .bundle
+  - .sass-cache
+  - .jekyll-cache
+  - .jekyll-metadata
+
+# 集合设置
+collections:
+  pages:
+    output: true
+    permalink: /:name/
+
+# 默认设置
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+
+# SEO 设置
+author: 语音对话模型评测团队
+twitter:
+  username: 
+  card: summary_large_image
+
+social:
+  name: 语音对话模型评测平台
+  links:
+    - https://github.com/your-username/your-repo
+
+# 站点设置
+lang: zh-CN
+timezone: Asia/Shanghai

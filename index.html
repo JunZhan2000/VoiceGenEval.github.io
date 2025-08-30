@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceGenEval: A Benchmark for Controllable Speech Generation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* 全局样式重置和基础设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* 主色调 */
+            --primary-color: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #93c5fd;
+            
+            /* 辅助色 */
+            --secondary-color: #64748b;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            
+            /* 背景色 */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --bg-dark: #0f172a;
+            
+            /* 文本色 */
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-white: #ffffff;
+            
+            /* 边框和阴影 */
+            --border-color: #e2e8f0;
+            --border-light: #f1f5f9;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            
+            /* 圆角 */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            /* 间距 */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            
+            /* 字体大小 */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            --text-3xl: 1.875rem;
+            --text-4xl: 2.25rem;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            font-size: var(--text-base);
+        }
+
+        /* 容器 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+        /* Submit 部分 */
+        .submit-section {
+            padding: var(--spacing-2xl) 0;
+            background: var(--bg-primary);
+        }
+
+        .submit-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            background: var(--bg-secondary);
+            padding: var(--spacing-2xl);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+        }
+
+        .submit-description {
+            font-size: var(--text-lg);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            font-weight: 500;
+        }
+
+        .submit-instructions {
+            font-size: var(--text-base);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .submit-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .submit-link:hover {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-dark);
+        }
+
+        .submit-details {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .nav-icon {
+            font-size: var(--text-2xl);
+        }
+
+        .nav-brand h1 {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--spacing-xl);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: var(--bg-secondary);
+        }
+
+        /* 主要内容 */
+        .main-content {
+            min-height: calc(100vh - 4rem);
+        }
+
+        /* 概览部分 */
+        .overview-section {
+            padding: var(--spacing-2xl) 0;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+        }
+
+        /* 改为上下布局 */
+        .overview-section .container {
+            display: flex;
+            flex-direction: column;   /* 改为上下排列 */
+            gap: var(--spacing-2xl);  /* 上下间距 */
+            align-items: center;      /* 居中对齐 */
+        }
+
+
+        .hero-title {
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-lg);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            max-width: 70rem;
+            font-size: var(--text-lg);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xl);
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: var(--spacing-xl);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            margin-top: var(--spacing-xs);
+        }
+
+        .hero-image {
+            display: flex;          /* 改为 flex 布局 */
+            flex-direction: column; /* 垂直排列子元素 */
+            align-items: center;    /* 居中对齐 */
+            margin-top: 0;  /* 调整图片和标题的间距 */
+            margin-bottom: 0;               /* 避免和下面的内容间距过大 */
+        }
+
+        .framework-diagram {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .framework-title {
+            text-align: center;
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+
+        .framework-content {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+
+        .framework-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+        }
+
+        .framework-section h4 {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .framework-section p {
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+        }
+
+        /* 通用部分样式 */
+        .section-title {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+
+        /* 排行榜部分 */
+        .leaderboard-section {
+            padding: var(--spacing-2xl) 0;
+            background: var(--bg-primary);
+        }
+
+        .language-tabs {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .tab-button {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: 2px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border-radius: var(--radius-lg);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-button.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--text-white);
+        }
+
+        .tab-button:hover:not(.active) {
+            border-color: var(--primary-light);
+            background: var(--bg-secondary);
+        }
+
+        .leaderboard-container {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--text-sm);
+        }
+
+        .leaderboard-table th {
+            background: var(--bg-secondary);
+            padding: var(--spacing-sm);
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
+            font-size: var(--text-xs);
+        }
+
+        .leaderboard-table td {
+            padding: var(--spacing-sm);
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .leaderboard-table tbody tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .rank-col {
+            width: 60px;
+        }
+
+        .model-col {
+            min-width: 200px;
+            text-align: left !important;
+        }
+
+        .metric-col {
+            width: 60px;
+        }
+
+        .overall-col {
+            width: 80px;
+            background: var(--bg-tertiary) !important;
+            font-weight: 600;
+        }
+
+        /* 分数颜色 */
+        .score-high {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .score-medium {
+            color: var(--warning-color);
+            font-weight: 500;
+        }
+
+        .score-low {
+            color: var(--error-color);
+            font-weight: 500;
+        }
+
+        /* 样本展示部分 */
+        .samples-section {
+            padding: var(--spacing-2xl) 0;
+            background: var(--bg-secondary);
+        }
+
+        .category-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .category-btn {
+            padding: var(--spacing-xs) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .framework-image {
+            max-width: 1000px;
+            width: 100%;
+            height: auto;
+            display: block;          /* 🔥 图片变成块级元素 */
+            margin: 0 auto;          /* 🔥 居中 */
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .framework-caption {
+            max-width: 1000px;
+            margin-top: 0.5rem;       /* 图片和文字的间距 */
+            font-size: 0.9rem;        /* 稍微小一点 */
+            color: var(--text-muted, #666); /* 用主题里的浅色文字，没定义时用灰色 */
+            font-style: italic;       /* 斜体，更像说明文字 */
+        }
+
+        .category-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--text-white);
+        }
+
+        .category-btn:hover:not(.active) {
+            border-color: var(--primary-light);
+            background: var(--bg-secondary);
+        }
+
+        .samples-container {
+            display: grid;
+            gap: var(--spacing-xl);
+            max-height: 800px;
+            overflow-y: auto;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-lg);
+            background: var(--bg-primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .sample-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sample-header {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .sample-category {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: var(--radius-md);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .sample-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .sample-description {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .instruction-section {
+            background: var(--bg-secondary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--primary-color);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .instruction-text {
+            font-weight: 500;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .audio-player {
+            margin-top: var(--spacing-sm);
+            display: flex;
+            align-items: center;  /* 🔥 垂直居中对齐 */
+            gap: var(--spacing-sm);  /* 🔥 标签和音频控件之间的间距 */
+        }
+
+        .audio-player audio {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .audio-player label {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            white-space: nowrap;  /* 🔥 防止标签换行 */
+        }
+
+        .responses-section {
+            background: var(--bg-tertiary);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+        }
+
+        .responses-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+
+        .response-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .model-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .model-score {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+        }
+
+        .response-content {
+            display: grid;
+            gap: var(--spacing-sm);
+        }
+
+        .response-text {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* 页脚 */
+        .footer {
+            background: var(--bg-dark);
+            color: var(--text-white);
+            padding: var(--spacing-2xl) 0 var(--spacing-lg);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .footer-section h4 {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-section p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .footer-section ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--text-white);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid #334155;
+        }
+
+        .footer-bottom p {
+            color: var(--text-muted);
+            font-size: var(--text-sm);
+        }
+
+        /* 加载动画 */
+        .loading-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: var(--spacing-md);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 排序功能样式 */
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .sortable:hover {
+            background-color: var(--primary-light) !important;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                height: auto;
+                padding: var(--spacing-md);
+                gap: var(--spacing-md);
+            }
+            
+            .overview-section .container {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-xl);
+            }
+            
+            .hero-title {
+                font-size: var(--text-3xl);
+                text-align: center;
+            }
+            
+            .hero-subtitle {
+                text-align: center;
+            }
+            
+            .hero-stats {
+                justify-content: center;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+            }
+        }
+
+        /* Authors section */
+        .authors-section {
+            text-align: center;
+            margin-top: var(--spacing-xl);
+            padding: var(--spacing-lg);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-lg);
+        }
+
+        .authors-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .authors-list {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .author-name {
+            display: inline-block;
+            margin: 0 var(--spacing-xs);
+        }
+
+        .affiliation {
+            display: block;
+            margin-top: var(--spacing-sm);
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        #overview .section-title {
+            margin-bottom: -2rem; /* 单独缩小 Overview 标题和图片之间的间距 */
+        }
+        
+        #overview .hero-image {
+            margin-top: 0.5rem; /* 可选：再微调图片和标题的距离 */
+            margin-bottom: 0;   /* 避免和下面堆积太大间距 */
+        }
+
+        /* Links section */
+        .links-section {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .link-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--primary-color);
+            color: var(--text-white);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .link-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .link-button i {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* 分层类别选择器样式 */
+        .category-hierarchy {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .main-category-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .main-category-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .main-category-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .main-category-btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: 2px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border-radius: var(--radius-lg);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: var(--text-sm);
+        }
+
+        .main-category-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--text-white);
+        }
+
+        .main-category-btn:hover:not(.active) {
+            border-color: var(--primary-light);
+            background: var(--bg-secondary);
+        }
+
+        .sub-category-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .sub-category-title {
+            font-size: var(--text-base);
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .sub-category-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--spacing-xs);
+        }
+
+        .sub-category-btn {
+            padding: var(--spacing-xs) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sub-category-btn.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: var(--text-white);
+        }
+
+        .sub-category-btn:hover:not(.active) {
+            border-color: var(--primary-light);
+            background: var(--bg-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-icon">🎙️</span>
+                <h1>VoiceGenEval</h1>
+            </div>
+            <div class="nav-links">
+                <a href="#overview" class="nav-link">Overview</a>
+                <a href="#leaderboard" class="nav-link">Leaderboard</a>
+                <a href="#samples" class="nav-link">Examples</a>
+                <a href="#submit" class="nav-link">Submit</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 概览部分 -->
+        <section id="overview" class="overview-section">
+            <div class="container">
+                <!-- 文字部分 -->
+                <div class="hero-content">
+                    <h2 class="hero-title">VoiceGenEval: A Benchmark for Controllable Speech Generation</h2>
+                    <p class="hero-subtitle">
+                        Comprehensive evaluation of controllable speech generation capabilities in spoken language models,
+                        assessing not just what models say, but how they say it.
+                    </p>
+        
+                    <!-- Links -->
+                    <div class="links-section">
+                        <a href="#" class="link-button">
+                            <i data-lucide="file-text"></i>
+                            Paper
+                        </a>
+                        <a href="https://github.com/JunZhan2000" class="link-button">
+                            <i data-lucide="github"></i>
+                            Code
+                        </a>
+                        <a href="https://huggingface.co/datasets/your-dataset" class="link-button">
+                            <i data-lucide="database"></i>
+                            Dataset
+                        </a>
+                    </div>
+                </div>
+        
+                <!-- Overview 标题 -->
+                <h2 class="section-title">Overview</h2>
+        
+                <!-- 图片部分 -->
+                <figure class="hero-image">
+                    <img src="data/images/main-picture.png" alt="VoiceGenEval Framework" class="framework-image">
+                    <figcaption class="framework-caption">
+                        Overview of the proposed VoiceGenEval framework. The upper part shows instruction examples in two languages 
+                        across four data categories: Acoustic Attribute, Natural Language Instruction, Role-Playing, and Explicit Empathy. 
+                        The lower part illustrates a three-level evaluation process--content, style, and naturalness--conducted with LALM.
+                    </figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- 排行榜部分 -->
+        <section id="leaderboard" class="leaderboard-section">
+            <div class="container">
+                <h2 class="section-title">Models Leaderboard</h2>
+                
+                <!-- 语言切换标签 -->
+                <div class="language-tabs">
+                    <button class="tab-button active" data-language="english">English</button>
+                    <button class="tab-button" data-language="chinese">Chinese</button>
+                </div>
+
+                <!-- 排行榜表格 -->
+                <div class="leaderboard-container">
+                    <div class="table-wrapper">
+                        <table class="leaderboard-table" id="leaderboard-table">
+                            <thead id="table-header">
+                                <!-- Table header will be generated by JavaScript -->
+                            </thead>
+                            <tbody id="leaderboard-body">
+                                <!-- Data will be loaded by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 样本展示部分 -->
+        <section id="samples" class="samples-section">
+            <div class="container">
+                <h2 class="section-title">Example Instructions</h2>
+                
+                <!-- 语言选择器 -->
+                <div class="language-tabs" style="margin-bottom: var(--spacing-md);">
+                    <button class="tab-button active" data-sample-language="en">English</button>
+                    <button class="tab-button" data-sample-language="zh">中文</button>
+                </div>
+                
+                <!-- 分层类别选择器 -->
+                <div class="category-hierarchy" id="category-hierarchy">
+                    <!-- 大类选择器 -->
+                    <div class="main-category-section">
+                        <h3 class="main-category-title">Main Categories</h3>
+                        <div class="main-category-selector" id="main-category-selector">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 小类选择器 -->
+                    <div class="sub-category-section">
+                        <h4 class="sub-category-title">Subcategories</h4>
+                        <div class="sub-category-selector" id="sub-category-selector">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 加载状态 -->
+                <div class="loading-placeholder" id="samples-loading">
+                    <div class="spinner"></div>
+                    <p>Loading samples...</p>
+                </div>
+
+                <!-- 样本展示容器 -->
+                <div class="samples-container" id="samples-container" style="display: none;">
+                    <!-- Samples will be loaded by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Submit 部分 -->
+        <section id="submit" class="submit-section">
+            <div class="container">
+                <h2 class="section-title">Results Submission</h2>
+                <div class="submit-content">
+                    <p class="submit-description">
+                        Have a new model to evaluate?
+                    </p>
+                    <p class="submit-instructions">
+                        Join the VoiceGenEval leaderboard! Check out our 
+                        <a href="https://github.com/JunZhan2000/VoiceGenEval" class="submit-link" target="_blank">Evaluation Guide</a> 
+                        to get started.
+                    </p>
+                    <p class="submit-details">
+                        We provide detailed instructions on how to run evaluations, format your results, and submit them for inclusion in our benchmark leaderboard.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>About VoiceGenEval</h4>
+                    <p>A comprehensive benchmark for evaluating controllable speech generation in spoken dialogue models, focusing on both semantic accuracy and expressive capabilities.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://arxiv.org/abs/your-paper-id">Paper</a></li>
+                        <li><a href="https://github.com/JunZhan2000/VoiceGenEval">GitHub Repository</a></li>
+                        <li><a href="https://huggingface.co/datasets/your-username/VoiceGenEval">Dataset (HuggingFace)</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Citation</h4>
+                    <p>If you use VoiceGenEval in your research, please cite our paper (BibTeX coming soon).</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 VoiceGenEval. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 在 JavaScript 开头部分添加这个映射对象
+        const modelLinks = {
+            "gpt-4o-audio-preview-2025-06-03": "https://platform.openai.com/docs/models/gpt-4o-mini-audio-preview",
+            "gpt-4o-mini-audio-preview-2024-12-17": "https://platform.openai.com/docs/models/gpt-4o-mini-audio-preview",
+            "Doubao-Realtime": "https://www.volcengine.com/docs/6561/1594356",
+            "Step-Audio": "https://github.com/stepfun-ai/Step-Audio",
+            "Kimi-Audio": "https://github.com/MoonshotAI/Kimi-Audio",
+            "Baichuan-Audio": "https://github.com/baichuan-inc/Baichuan-Audio",
+            "Qwen2.5-Omni": "https://github.com/QwenLM/Qwen2.5-Omni"
+        };
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Current language and sorting selection
+        let currentLanguage = 'english';
+        let currentSort = { field: 'overall', direction: 'desc' };
+        let currentSampleLanguage = 'en';
+        let currentMainCategory = 'Instruction'; // 默认选择instruction大类
+        let currentSubCategory = 'conversion'; // 默认选择conversion小类
+        let samplesData = [];
+
+        // Leaderboard data
+        const leaderboardData = {
+            english: [
+                {
+                    rank: 1,
+                    model: "gpt-4o-audio-preview-2025-06-03",
+                    overall: 4.08,
+                    acoustic_age: 3.67,
+                    acoustic_speed: 3.45,
+                    acoustic_gender: 2.79,
+                    acoustic_emotion: 4.00,
+                    acoustic_pitch: 3.60,
+                    acoustic_volume: 4.10,
+                    acoustic_composite: 3.27,
+                    instruction_emotion: 3.93,
+                    instruction_style: 4.23,
+                    instruction_conversion: 4.07,
+                    roleplay_scenario: 3.89,
+                    roleplay_character: 3.83,
+                    empathy_anger: 4.95,
+                    empathy_sadness: 4.90,
+                    empathy_anxiety: 5.00,
+                    empathy_joy: 4.54
+                },
+                {
+                    rank: 2,
+                    model: "gpt-4o-mini-audio-preview-2024-12-17",
+                    overall: 3.92,
+                    acoustic_age: 2.83,
+                    acoustic_speed: 3.75,
+                    acoustic_gender: 3.50,
+                    acoustic_emotion: 3.79,
+                    acoustic_pitch: 3.10,
+                    acoustic_volume: 4.15,
+                    acoustic_composite: 3.05,
+                    instruction_emotion: 3.72,
+                    instruction_style: 4.00,
+                    instruction_conversion: 3.47,
+                    roleplay_scenario: 3.23,
+                    roleplay_character: 3.82,
+                    empathy_anger: 4.98,
+                    empathy_sadness: 5.00,
+                    empathy_anxiety: 4.87,
+                    empathy_joy: 5.00
+                },
+                {
+                    rank: 3,
+                    model: "Doubao-Realtime",
+                    overall: 3.67,
+                    acoustic_age: 3.75,
+                    acoustic_speed: 3.55,
+                    acoustic_gender: 3.46,
+                    acoustic_emotion: 3.38,
+                    acoustic_pitch: 3.25,
+                    acoustic_volume: 4.05,
+                    acoustic_composite: 3.13,
+                    instruction_emotion: 3.52,
+                    instruction_style: 3.67,
+                    instruction_conversion: 2.90,
+                    roleplay_scenario: 3.27,
+                    roleplay_character: 2.56,
+                    empathy_anger: 4.89,
+                    empathy_sadness: 5.00,
+                    empathy_anxiety: 4.81,
+                    empathy_joy: 4.94
+                },
+                {
+                    rank: 4,
+                    model: "Step-Audio",
+                    overall: 2.80,
+                    acoustic_age: 2.71,
+                    acoustic_speed: 2.40,
+                    acoustic_gender: 2.38,
+                    acoustic_emotion: 2.46,
+                    acoustic_pitch: 2.20,
+                    acoustic_volume: 3.15,
+                    acoustic_composite: 2.28,
+                    instruction_emotion: 2.59,
+                    instruction_style: 2.89,
+                    instruction_conversion: 2.56,
+                    roleplay_scenario: 1.65,
+                    roleplay_character: 2.11,
+                    empathy_anger: 3.95,
+                    empathy_sadness: 4.37,
+                    empathy_anxiety: 3.87,
+                    empathy_joy: 4.29
+                },
+                {
+                    rank: 5,
+                    model: "Kimi-Audio",
+                    overall: 2.56,
+                    acoustic_age: 2.79,
+                    acoustic_speed: 2.45,
+                    acoustic_gender: 2.54,
+                    acoustic_emotion: 3.04,
+                    acoustic_pitch: 1.55,
+                    acoustic_volume: 3.00,
+                    acoustic_composite: 2.33,
+                    instruction_emotion: 2.19,
+                    instruction_style: 2.41,
+                    instruction_conversion: 2.33,
+                    roleplay_scenario: 1.73,
+                    roleplay_character: 1.72,
+                    empathy_anger: 3.59,
+                    empathy_sadness: 3.97,
+                    empathy_anxiety: 3.65,
+                    empathy_joy: 3.46
+                },
+                {
+                    rank: 6,
+                    model: "Baichuan-Audio",
+                    overall: 2.50,
+                    acoustic_age: 2.71,
+                    acoustic_speed: 2.20,
+                    acoustic_gender: 3.83,
+                    acoustic_emotion: 2.58,
+                    acoustic_pitch: 2.05,
+                    acoustic_volume: 2.05,
+                    acoustic_composite: 2.55,
+                    instruction_emotion: 2.23,
+                    instruction_style: 2.21,
+                    instruction_conversion: 1.88,
+                    roleplay_scenario: 2.07,
+                    roleplay_character: 2.33,
+                    empathy_anger: 2.41,
+                    empathy_sadness: 3.43,
+                    empathy_anxiety: 2.74,
+                    empathy_joy: 3.88
+                },
+                {
+                    rank: 7,
+                    model: "Qwen2.5-Omni",
+                    overall: 2.46,
+                    acoustic_age: 2.58,
+                    acoustic_speed: 2.25,
+                    acoustic_gender: 1.92,
+                    acoustic_emotion: 3.04,
+                    acoustic_pitch: 1.95,
+                    acoustic_volume: 2.05,
+                    acoustic_composite: 2.30,
+                    instruction_emotion: 2.67,
+                    instruction_style: 2.87,
+                    instruction_conversion: 2.36,
+                    roleplay_scenario: 1.80,
+                    roleplay_character: 1.68,
+                    empathy_anger: 2.95,
+                    empathy_sadness: 2.73,
+                    empathy_anxiety: 3.55,
+                    empathy_joy: 3.43
+                }
+            ],
+            chinese: [
+                {
+                    rank: 1,
+                    model: "Doubao-Realtime",
+                    overall: 4.13,
+                    acoustic_age: 3.75,
+                    acoustic_speed: 4.32,
+                    acoustic_gender: 2.71,
+                    acoustic_emotion: 4.73,
+                    acoustic_pitch: 4.50,
+                    acoustic_volume: 4.68,
+                    acoustic_composite: 3.77,
+                    instruction_emotion: 3.97,
+                    instruction_style: 3.93,
+                    instruction_conversion: 2.92,
+                    roleplay_scenario: 4.44,
+                    roleplay_character: 3.79,
+                    empathy_anger: 4.59,
+                    empathy_sadness: 4.72,
+                    empathy_anxiety: 4.80,
+                    empathy_joy: 4.83
+                },
+                {
+                    rank: 2,
+                    model: "gpt-4o-audio-preview-2025-06-03",
+                    overall: 3.85,
+                    acoustic_age: 2.80,
+                    acoustic_speed: 2.60,
+                    acoustic_gender: 3.64,
+                    acoustic_emotion: 3.87,
+                    acoustic_pitch: 3.64,
+                    acoustic_volume: 3.90,
+                    acoustic_composite: 3.22,
+                    instruction_emotion: 3.31,
+                    instruction_style: 3.61,
+                    instruction_conversion: 3.15,
+                    roleplay_scenario: 3.88,
+                    roleplay_character: 3.90,
+                    empathy_anger: 4.75,
+                    empathy_sadness: 4.83,
+                    empathy_anxiety: 4.67,
+                    empathy_joy: 4.80
+                },
+                {
+                    rank: 3,
+                    model: "gpt-4o-mini-audio-preview-2024-12-17",
+                    overall: 3.75,
+                    acoustic_age: 3.07,
+                    acoustic_speed: 3.76,
+                    acoustic_gender: 3.44,
+                    acoustic_emotion: 3.75,
+                    acoustic_pitch: 3.00,
+                    acoustic_volume: 3.70,
+                    acoustic_composite: 3.32,
+                    instruction_emotion: 3.46,
+                    instruction_style: 3.47,
+                    instruction_conversion: 3.12,
+                    roleplay_scenario: 3.49,
+                    roleplay_character: 3.84,
+                    empathy_anger: 4.30,
+                    empathy_sadness: 4.52,
+                    empathy_anxiety: 4.73,
+                    empathy_joy: 4.69
+                },
+                {
+                    rank: 4,
+                    model: "Kimi-Audio",
+                    overall: 3.08,
+                    acoustic_age: 2.91,
+                    acoustic_speed: 3.27,
+                    acoustic_gender: 1.94,
+                    acoustic_emotion: 3.87,
+                    acoustic_pitch: 3.21,
+                    acoustic_volume: 3.16,
+                    acoustic_composite: 3.14,
+                    instruction_emotion: 2.58,
+                    instruction_style: 2.71,
+                    instruction_conversion: 2.49,
+                    roleplay_scenario: 3.01,
+                    roleplay_character: 2.23,
+                    empathy_anger: 3.86,
+                    empathy_sadness: 3.86,
+                    empathy_anxiety: 3.80,
+                    empathy_joy: 4.57
+                },
+                {
+                    rank: 5,
+                    model: "Qwen2.5-Omni",
+                    overall: 3.03,
+                    acoustic_age: 3.43,
+                    acoustic_speed: 2.47,
+                    acoustic_gender: 3.00,
+                    acoustic_emotion: 2.62,
+                    acoustic_pitch: 2.50,
+                    acoustic_volume: 2.53,
+                    acoustic_composite: 2.29,
+                    instruction_emotion: 2.54,
+                    instruction_style: 2.36,
+                    instruction_conversion: 2.14,
+                    roleplay_scenario: 2.55,
+                    roleplay_character: 2.26,
+                    empathy_anger: 4.64,
+                    empathy_sadness: 4.28,
+                    empathy_anxiety: 4.77,
+                    empathy_joy: 4.91
+                },
+                {
+                    rank: 6,
+                    model: "Step-Audio",
+                    overall: 2.94,
+                    acoustic_age: 2.54,
+                    acoustic_speed: 2.72,
+                    acoustic_gender: 2.83,
+                    acoustic_emotion: 3.05,
+                    acoustic_pitch: 2.62,
+                    acoustic_volume: 2.75,
+                    acoustic_composite: 2.56,
+                    instruction_emotion: 2.34,
+                    instruction_style: 2.42,
+                    instruction_conversion: 2.04,
+                    roleplay_scenario: 2.95,
+                    roleplay_character: 2.80,
+                    empathy_anger: 3.59,
+                    empathy_sadness: 4.52,
+                    empathy_anxiety: 3.20,
+                    empathy_joy: 4.26
+                },
+                {
+                    rank: 7,
+                    model: "Baichuan-Audio",
+                    overall: 2.25,
+                    acoustic_age: 2.73,
+                    acoustic_speed: 2.41,
+                    acoustic_gender: 2.94,
+                    acoustic_emotion: 2.30,
+                    acoustic_pitch: 1.94,
+                    acoustic_volume: 2.89,
+                    acoustic_composite: 2.53,
+                    instruction_emotion: 1.74,
+                    instruction_style: 1.75,
+                    instruction_conversion: 1.70,
+                    roleplay_scenario: 2.30,
+                    roleplay_character: 1.95,
+                    empathy_anger: 2.11,
+                    empathy_sadness: 2.55,
+                    empathy_anxiety: 2.20,
+                    empathy_joy: 3.51
+                }
+            ]
+        };
+
+        // Function to get score color class
+        function getScoreClass(score) {
+            if (score >= 4.0) return 'score-high';
+            if (score >= 3.0) return 'score-medium';
+            return 'score-low';
+        }
+
+        // Function to sort data
+        function sortData(data, field, direction) {
+            return [...data].sort((a, b) => {
+                const valueA = a[field];
+                const valueB = b[field];
+                
+                if (direction === 'desc') {
+                    return valueB - valueA;
+                } else {
+                    return valueA - valueB;
+                }
+            }).map((item, index) => ({
+                ...item,
+                rank: index + 1
+            }));
+        }
+
+        // Function to render leaderboard header
+        function renderTableHeader() {
+            const header = document.getElementById('table-header');
+
+            // 根据当前排序状态设置箭头
+            function getArrow(field) {
+                if (currentSort.field === field) {
+                    return currentSort.direction === 'desc' ? '↓' : '↑';
+                }
+                return '↓'; // 默认
+            }
+
+            header.innerHTML = `
+                <tr>
+                    <th class="rank-col" rowspan="2">Rank</th>
+                    <th class="model-col" rowspan="2">Model</th>
+                    <th class="overall-col sortable" rowspan="2" data-sort="overall">
+                        Overall ${getArrow('overall')}
+                    </th>
+                    <th colspan="7">Acoustic Attributes</th>
+                    <th colspan="3">Natural Language Instructions</th>
+                    <th colspan="2">Role-Playing</th>
+                    <th colspan="4">Implicit Empathy</th>
+                </tr>
+                <tr>
+                    <th class="metric-col sortable" data-sort="acoustic_age">Age ${getArrow('acoustic_age')}</th>
+                    <th class="metric-col sortable" data-sort="acoustic_speed">Speed ${getArrow('acoustic_speed')}</th>
+                    <th class="metric-col sortable" data-sort="acoustic_gender">Gender ${getArrow('acoustic_gender')}</th>
+                    <th class="metric-col sortable" data-sort="acoustic_emotion">Emotion ${getArrow('acoustic_emotion')}</th>
+                    <th class="metric-col sortable" data-sort="acoustic_pitch">Pitch ${getArrow('acoustic_pitch')}</th>
+                    <th class="metric-col sortable" data-sort="acoustic_volume">Volume ${getArrow('acoustic_volume')}</th>
+                    <th class="metric-col sortable" data-sort="acoustic_composite">Comp. ${getArrow('acoustic_composite')}</th>
+                    <th class="metric-col sortable" data-sort="instruction_emotion">Emotion ${getArrow('instruction_emotion')}</th>
+                    <th class="metric-col sortable" data-sort="instruction_style">Style ${getArrow('instruction_style')}</th>
+                    <th class="metric-col sortable" data-sort="instruction_conversion">Conv. ${getArrow('instruction_conversion')}</th>
+                    <th class="metric-col sortable" data-sort="roleplay_scenario">Scene ${getArrow('roleplay_scenario')}</th>
+                    <th class="metric-col sortable" data-sort="roleplay_character">Char. ${getArrow('roleplay_character')}</th>
+                    <th class="metric-col sortable" data-sort="empathy_anger">Anger ${getArrow('empathy_anger')}</th>
+                    <th class="metric-col sortable" data-sort="empathy_sadness">Sadness ${getArrow('empathy_sadness')}</th>
+                    <th class="metric-col sortable" data-sort="empathy_anxiety">Anxiety ${getArrow('empathy_anxiety')}</th>
+                    <th class="metric-col sortable" data-sort="empathy_joy">Joy ${getArrow('empathy_joy')}</th>
+                </tr>
+            `;
+        }
+
+        // Function to render leaderboard
+        function renderLeaderboard() {
+            const tbody = document.getElementById('leaderboard-body');
+            let data = leaderboardData[currentLanguage];
+            
+            // Apply sorting
+            data = sortData(data, currentSort.field, currentSort.direction);
+            
+            tbody.innerHTML = data.map(row => `
+                <tr>
+                    <td>${row.rank === 1 ? '🥇' : row.rank === 2 ? '🥈' : row.rank === 3 ? '🥉' : row.rank}</td>
+                    
+                    <td style="text-align: left; font-weight: 500;">
+                        ${modelLinks[row.model] ? 
+                            `<a href="${modelLinks[row.model]}" target="_blank" style="color: var(--primary-color); text-decoration: none;">${row.model}</a>` : 
+                            row.model
+                        }
+                    </td>
+                    <td class="${getScoreClass(row.overall)}" style="font-weight: 600;">${row.overall.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.acoustic_age)}">${row.acoustic_age.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.acoustic_speed)}">${row.acoustic_speed.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.acoustic_gender)}">${row.acoustic_gender.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.acoustic_emotion)}">${row.acoustic_emotion.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.acoustic_pitch)}">${row.acoustic_pitch.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.acoustic_volume)}">${row.acoustic_volume.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.acoustic_composite)}">${row.acoustic_composite.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.instruction_emotion)}">${row.instruction_emotion.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.instruction_style)}">${row.instruction_style.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.instruction_conversion)}">${row.instruction_conversion.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.roleplay_scenario)}">${row.roleplay_scenario.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.roleplay_character)}">${row.roleplay_character.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.empathy_anger)}">${row.empathy_anger.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.empathy_sadness)}">${row.empathy_sadness.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.empathy_anxiety)}">${row.empathy_anxiety.toFixed(2)}</td>
+                    <td class="${getScoreClass(row.empathy_joy)}">${row.empathy_joy.toFixed(2)}</td>
+                </tr>
+            `).join('');
+        }
+
+        // 类别解析与显示名映射
+        function getMainCategory(ability) {
+            return String(ability || '').split('/')[0] || '';
+        }
+        function getSubCategory(ability) {
+            return String(ability || '').split('/')[1] || '';
+        }
+        
+        // 大类显示名映射
+        const mainCategoryNameMap = {
+            'acoustic_attributes': 'Acoustic Attributes',
+            'Instruction': 'Natural Language Instructions',
+            'role_playing': 'Role-Playing',
+            'empathy': 'Implicit Empathy'
+        };
+        
+        // 小类显示名映射
+        const subCategoryNameMap = {
+            // acoustic_attributes
+            age: 'Age',
+            speed: 'Speed',
+            gender: 'Gender',
+            emotion: 'Emotion',
+            pitch: 'Pitch',
+            volume: 'Volume',
+            composite: 'Composite',
+            // Instruction
+            emotion_instruction: 'Emotion',
+            style: 'Style',
+            conversion: 'Conversion',
+            // role_playing
+            scenario: 'Scenario',
+            character: 'Character',
+            // empathy
+            anger: 'Anger',
+            sadness: 'Sadness',
+            anxiety: 'Anxiety',
+            joy: 'Joy',
+            sadness_disappointment: 'Sadness & Disappointment'
+        };
+        
+        function getMainCategoryDisplayName(mainKey) {
+            return mainCategoryNameMap[mainKey] || mainKey || 'Unknown';
+        }
+        
+        function getSubCategoryDisplayName(subKey) {
+            return subCategoryNameMap[subKey] || subKey || 'Unknown';
+        }
+
+        // Function to load samples from JSONL file
+        async function loadSamples(language) {
+            const url = `data/examples/${language}/metadata_sample.jsonl`;
+            try {
+                const res = await fetch(url, { cache: 'no-cache' });
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status} when fetching ${url}`);
+                }
+                const text = await res.text();
+
+                const firstNonWS = text.trimStart().slice(0, 1);
+                if (firstNonWS === '<') {
+                    throw new Error('Got HTML/XML instead of JSONL. Serve via HTTP and check path.');
+                }
+
+                const lines = text
+                    .split('\n')
+                    .map(l => l.trim())
+                    .filter(l => l.length > 0);
+
+                const data = lines.map((line, idx) => {
+                    try {
+                        return JSON.parse(line);
+                    } catch (e) {
+                        console.error(`JSONL parse error at line ${idx + 1}:`, e, line);
+                        return null;
+                    }
+                }).filter(Boolean);
+
+                return data;
+            } catch (error) {
+                console.error('Error loading samples:', error);
+                return [];
+            }
+        }
+
+        // 动态渲染大类按钮
+        function renderMainCategoryButtons() {
+            const container = document.getElementById('main-category-selector');
+            if (!container) return;
+
+            const mainSet = new Set();
+            for (const s of samplesData) {
+                const main = getMainCategory(s.ability);
+                if (main) mainSet.add(main);
+            }
+            const mains = Array.from(mainSet);
+
+            const buttons = mains.map(main => {
+                const label = getMainCategoryDisplayName(main);
+                const active = currentMainCategory === main ? 'active' : '';
+                return `<button class="main-category-btn ${active}" data-main-cat="${main}">${label}</button>`;
+            });
+
+            container.innerHTML = buttons.join('');
+
+            container.querySelectorAll('.main-category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    container.querySelectorAll('.main-category-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentMainCategory = this.dataset.mainCat;
+                    
+                    // 切换大类时，重新渲染小类按钮，并重置小类选择
+                    renderSubCategoryButtons();
+                    renderSamples();
+                });
+            });
+        }
+
+        // 动态渲染小类按钮（根据当前大类过滤）
+        function renderSubCategoryButtons() {
+            const container = document.getElementById('sub-category-selector');
+            if (!container) return;
+
+            // 根据当前大类过滤小类
+            let filteredSamples = samplesData;
+            if (currentMainCategory) {
+                filteredSamples = filteredSamples.filter(sample =>
+                    getMainCategory(sample.ability) === currentMainCategory
+                );
+            }
+
+            const subSet = new Set();
+            for (const s of filteredSamples) {
+                const sub = getSubCategory(s.ability);
+                if (sub) subSet.add(sub);
+            }
+            const subs = Array.from(subSet);
+
+            const buttons = subs.map(sub => {
+                const label = getSubCategoryDisplayName(sub);
+                const active = currentSubCategory === sub ? 'active' : '';
+                return `<button class="sub-category-btn ${active}" data-sub-cat="${sub}">${label}</button>`;
+            });
+
+            container.innerHTML = buttons.join('');
+
+            // 如果当前选择的小类不在新的小类列表中，重置为第一个可用的
+            if (currentSubCategory && !subs.includes(currentSubCategory)) {
+                currentSubCategory = subs.length > 0 ? subs[0] : '';
+                // 重新渲染以更新active状态
+                renderSubCategoryButtons();
+                return;
+            }
+
+            container.querySelectorAll('.sub-category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    container.querySelectorAll('.sub-category-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentSubCategory = this.dataset.subCat;
+                    renderSamples();
+                });
+            });
+        }
+
+        // Function to render samples（按大类和小类过滤）
+        function renderSamples() {
+            const container = document.getElementById('samples-container');
+            const loading = document.getElementById('samples-loading');
+            
+            let filteredSamples = samplesData;
+
+            // 先按大类过滤
+            if (currentMainCategory) {
+                filteredSamples = filteredSamples.filter(sample =>
+                    getMainCategory(sample.ability) === currentMainCategory
+                );
+            }
+
+            // 再按小类过滤
+            if (currentSubCategory) {
+                filteredSamples = filteredSamples.filter(sample =>
+                    getSubCategory(sample.ability) === currentSubCategory
+                );
+            }
+            
+            if (!filteredSamples || filteredSamples.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 1rem; color: var(--text-secondary);">
+                        No samples to display for "${currentMainCategory}/${currentSubCategory}".
+                        <div style="margin-top: .5rem; font-size: .9rem; color: var(--text-muted);">
+                            If this seems unexpected, ensure you are serving over http://localhost and the file
+                            data/examples/${currentSampleLanguage}/metadata_sample.jsonl exists.
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Take first 10 samples for display
+            filteredSamples = filteredSamples.slice(0, 10);
+            
+            container.innerHTML = filteredSamples.map(sample => {
+                const instructText = currentSampleLanguage === 'zh' ? 
+                    (sample.instruct_text_translation_zh || sample.instruct_text) : 
+                    sample.instruct_text;
+                
+                const audioBasePath = `data/examples/${currentSampleLanguage}/wav/`;
+                const instructAudioPath = audioBasePath + sample.instruct_audio_path;
+
+                const mainKey = getMainCategory(sample.ability);
+                const subKey = getSubCategory(sample.ability);
+                const mainLabel = getMainCategoryDisplayName(mainKey);
+                const subLabel = getSubCategoryDisplayName(subKey);
+                
+                return `
+                    <div class="sample-item">
+                        
+                        
+                        <div class="instruction-section">
+                            <div class="instruction-text">
+                                <strong>Instruction:</strong> ${instructText}
+                            </div>
+                            <div class="audio-player">
+                                <label>🎧 Instruction Audio:</label>
+                                <audio controls>
+                                    <source src="${instructAudioPath}" type="audio/wav">
+                                    <source src="${instructAudioPath}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                        </div>
+                        
+                        <div class="responses-section">
+                            <h4 class="responses-title">Model Responses</h4>
+                            ${Array.isArray(sample.responses) ? sample.responses
+                        .sort((a, b) => {
+                            const scoreA = Number(a.gemini_score);
+                            const scoreB = Number(b.gemini_score);
+                            // 处理无效分数，将其排到最后
+                            if (!isFinite(scoreA) && !isFinite(scoreB)) return 0;
+                            if (!isFinite(scoreA)) return 1;
+                            if (!isFinite(scoreB)) return -1;
+                            // 分数从高到低排序
+                            return scoreB - scoreA;
+                        })
+                        .map(response => {
+                                const responseAudioPath = audioBasePath + response.response_audio_path;
+                                const responseText = currentSampleLanguage === 'zh' ? 
+                                    (response.response_text_zh_translation || response.response_text) : 
+                                    response.response_text;
+                                
+                                const scoreNum = Number(response.gemini_score);
+                                const scoreClass = isFinite(scoreNum) ? getScoreClass(scoreNum) : '';
+                                
+                                return `
+                                    <div class="response-item">
+                                        <div class="response-header">
+                                            <span class="model-name">${response.model_name}</span>
+                                            <span class="model-score ${scoreClass}">Score: ${isFinite(scoreNum) ? scoreNum : '-'}</span>
+                                        </div>
+                                        <div class="response-content">
+                                            <div class="response-text">
+                                                <strong>Response:</strong> ${responseText || ''}
+                                            </div>
+                                            <div class="audio-player">
+                                                <label>🎧 Response Audio:</label>
+                                                <audio controls>
+                                                    <source src="${responseAudioPath}" type="audio/wav">
+                                                    <source src="${responseAudioPath}" type="audio/mpeg">
+                                                    Your browser does not support the audio element.
+                                                </audio>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('') : '<div class="response-item">No responses.</div>'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Function to update samples display
+        async function updateSamples() {
+            const container = document.getElementById('samples-container');
+            const loading = document.getElementById('samples-loading');
+            
+            // Show loading
+            container.style.display = 'none';
+            loading.style.display = 'flex';
+            
+            // Load samples for current language
+            samplesData = await loadSamples(currentSampleLanguage);
+            console.log('Loaded samples:', samplesData.length, 'language:', currentSampleLanguage);
+            
+            // 每次切换语言后，重置为默认选择
+            currentMainCategory = 'Instruction';
+            currentSubCategory = 'conversion';
+            renderMainCategoryButtons();
+            renderSubCategoryButtons();
+
+            // Render samples
+            renderSamples();
+            
+            // Hide loading and show samples
+            loading.style.display = 'none';
+            container.style.display = 'block';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render initial content
+            renderTableHeader();
+            renderLeaderboard();
+            updateSamples();
+            
+            // Language tabs for leaderboard
+            document.querySelectorAll('.language-tabs .tab-button[data-language]').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.language-tabs .tab-button[data-language]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentLanguage = this.dataset.language;
+                    renderLeaderboard();
+                });
+            });
+            
+            // Language tabs for samples
+            document.querySelectorAll('.language-tabs .tab-button[data-sample-language]').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.language-tabs .tab-button[data-sample-language]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentSampleLanguage = this.dataset.sampleLanguage;
+                    updateSamples();
+                });
+            });
+            
+            // Add sorting functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('sortable')) {
+                    const field = e.target.dataset.sort;
+                    if (currentSort.field === field) {
+                        currentSort.direction = currentSort.direction === 'desc' ? 'asc' : 'desc';
+                    } else {
+                        currentSort.field = field;
+                        currentSort.direction = 'desc'; // 新列默认降序
+                    }
+                    renderTableHeader();   // 重新渲染表头（更新箭头）
+                    renderLeaderboard();   // 重新渲染表格数据
+                }
+            });
+            
+            // Smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+            
+            // Re-render Lucide icons
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+{
+  "english": [
+    {
+      "rank": 1,
+      "model": "GPT-4o",
+      "link": "https://openai.com/index/gpt-4o/",
+      "acoustic": 3.27,
+      "instruction": 4.08,
+      "roleplaying": 3.86,
+      "empathy": 4.85,
+      "overall": 4.08
+    },
+    {
+      "rank": 2,
+      "model": "GPT-4o-Mini",
+      "link": "https://openai.com/index/gpt-4o-mini/",
+      "acoustic": 3.05,
+      "instruction": 3.73,
+      "roleplaying": 3.53,
+      "empathy": 4.96,
+      "overall": 3.92
+    },
+    {
+      "rank": 3,
+      "model": "Doubao",
+      "link": "https://www.doubao.com/",
+      "acoustic": 3.13,
+      "instruction": 3.36,
+      "roleplaying": 2.92,
+      "empathy": 4.91,
+      "overall": 3.67
+    },
+    {
+      "rank": 4,
+      "model": "Step-Audio",
+      "link": "https://github.com/step-audio/step-audio",
+      "acoustic": 2.28,
+      "instruction": 2.68,
+      "roleplaying": 1.88,
+      "empathy": 4.12,
+      "overall": 2.80
+    },
+    {
+      "rank": 5,
+      "model": "Kimi-Audio",
+      "link": "https://github.com/MoonshotAI/Kimi-Audio",
+      "acoustic": 2.33,
+      "instruction": 2.31,
+      "roleplaying": 1.73,
+      "empathy": 3.67,
+      "overall": 2.56
+    },
+    {
+      "rank": 6,
+      "model": "Baichuan-Audio",
+      "link": "https://github.com/baichuan-inc/Baichuan-Audio",
+      "acoustic": 2.55,
+      "instruction": 2.11,
+      "roleplaying": 2.20,
+      "empathy": 3.11,
+      "overall": 2.50
+    },
+    {
+      "rank": 7,
+      "model": "Qwen2.5-Omni",
+      "link": "https://github.com/QwenLM/Qwen2.5-Omni",
+      "acoustic": 2.30,
+      "instruction": 2.63,
+      "roleplaying": 2.08,
+      "empathy": 3.17,
+      "overall": 2.46
+    }
+  ],
+  "chinese": [
+    {
+      "rank": 1,
+      "model": "Doubao",
+      "link": "https://www.doubao.com/",
+      "acoustic": 3.77,
+      "instruction": 3.61,
+      "roleplaying": 4.12,
+      "empathy": 4.74,
+      "overall": 4.13
+    },
+    {
+      "rank": 2,
+      "model": "GPT-4o",
+      "link": "https://openai.com/index/gpt-4o/",
+      "acoustic": 3.22,
+      "instruction": 3.36,
+      "roleplaying": 3.52,
+      "empathy": 4.76,
+      "overall": 3.85
+    },
+    {
+      "rank": 3,
+      "model": "GPT-4o-Mini",
+      "link": "https://openai.com/index/gpt-4o-mini/",
+      "acoustic": 3.32,
+      "instruction": 3.55,
+      "roleplaying": 3.67,
+      "empathy": 4.56,
+      "overall": 3.75
+    },
+    {
+      "rank": 4,
+      "model": "Kimi-Audio",
+      "link": "https://github.com/MoonshotAI/Kimi-Audio",
+      "acoustic": 3.14,
+      "instruction": 2.59,
+      "roleplaying": 2.62,
+      "empathy": 4.02,
+      "overall": 3.08
+    },
+    {
+      "rank": 5,
+      "model": "Qwen2.5-Omni",
+      "link": "https://github.com/QwenLM/Qwen2.5-Omni",
+      "acoustic": 2.29,
+      "instruction": 2.35,
+      "roleplaying": 2.41,
+      "empathy": 4.65,
+      "overall": 3.03
+    },
+    {
+      "rank": 6,
+      "model": "Step-Audio",
+      "link": "https://github.com/step-audio/step-audio",
+      "acoustic": 2.56,
+      "instruction": 2.27,
+      "roleplaying": 2.88,
+      "empathy": 3.89,
+      "overall": 2.94
+    },
+    {
+      "rank": 7,
+      "model": "Baichuan-Audio",
+      "link": "https://github.com/baichuan-inc/Baichuan-Audio",
+      "acoustic": 2.53,
+      "instruction": 1.73,
+      "roleplaying": 2.13,
+      "empathy": 2.87,
+      "overall": 2.25
+    }
+  ]
+}

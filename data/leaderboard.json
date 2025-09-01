@@ -4,60 +4,60 @@
       "rank": 1,
       "model": "GPT-4o",
       "link": "https://openai.com/index/gpt-4o/",
-      "acoustic": 3.27,
-      "instruction": 4.08,
+      "acoustic": 3.43,
+      "instruction": 4.07,
       "roleplaying": 3.86,
       "empathy": 4.85,
-      "overall": 4.08
+      "overall": 4.05
     },
     {
       "rank": 2,
       "model": "GPT-4o-Mini",
       "link": "https://openai.com/index/gpt-4o-mini/",
-      "acoustic": 3.05,
+      "acoustic": 3.29,
       "instruction": 3.73,
       "roleplaying": 3.53,
       "empathy": 4.96,
-      "overall": 3.92
+      "overall": 3.88
     },
     {
       "rank": 3,
       "model": "Doubao",
       "link": "https://www.doubao.com/",
-      "acoustic": 3.13,
+      "acoustic": 3.35,
       "instruction": 3.36,
-      "roleplaying": 2.92,
+      "roleplaying": 2.91,
       "empathy": 4.91,
-      "overall": 3.67
+      "overall": 3.63
     },
     {
       "rank": 4,
       "model": "Step-Audio",
       "link": "https://github.com/step-audio/step-audio",
-      "acoustic": 2.28,
+      "acoustic": 2.42,
       "instruction": 2.68,
       "roleplaying": 1.88,
       "empathy": 4.12,
-      "overall": 2.80
+      "overall": 2.77
     },
     {
       "rank": 5,
       "model": "Kimi-Audio",
       "link": "https://github.com/MoonshotAI/Kimi-Audio",
-      "acoustic": 2.33,
+      "acoustic": 2.45,
       "instruction": 2.31,
       "roleplaying": 1.73,
-      "empathy": 3.67,
-      "overall": 2.56
+      "empathy": 3.66,
+      "overall": 2.54
     },
     {
       "rank": 6,
       "model": "Baichuan-Audio",
       "link": "https://github.com/baichuan-inc/Baichuan-Audio",
-      "acoustic": 2.55,
+      "acoustic": 2.56,
       "instruction": 2.11,
-      "roleplaying": 2.20,
-      "empathy": 3.11,
+      "roleplaying": 2.21,
+      "empathy": 3.12,
       "overall": 2.50
     },
     {
@@ -66,7 +66,7 @@
       "link": "https://github.com/QwenLM/Qwen2.5-Omni",
       "acoustic": 2.30,
       "instruction": 2.63,
-      "roleplaying": 2.08,
+      "roleplaying": 1.74,
       "empathy": 3.17,
       "overall": 2.46
     }
@@ -76,70 +76,70 @@
       "rank": 1,
       "model": "Doubao",
       "link": "https://www.doubao.com/",
-      "acoustic": 3.77,
-      "instruction": 3.61,
+      "acoustic": 3.98,
+      "instruction": 3.58,
       "roleplaying": 4.12,
       "empathy": 4.74,
-      "overall": 4.13
+      "overall": 4.10
     },
     {
       "rank": 2,
       "model": "GPT-4o",
       "link": "https://openai.com/index/gpt-4o/",
-      "acoustic": 3.22,
-      "instruction": 3.36,
-      "roleplaying": 3.52,
+      "acoustic": 3.37,
+      "instruction": 3.33,
+      "roleplaying": 3.90,
       "empathy": 4.76,
-      "overall": 3.85
+      "overall": 3.84
     },
     {
       "rank": 3,
       "model": "GPT-4o-Mini",
       "link": "https://openai.com/index/gpt-4o-mini/",
-      "acoustic": 3.32,
-      "instruction": 3.55,
-      "roleplaying": 3.67,
+      "acoustic": 3.43,
+      "instruction": 3.30,
+      "roleplaying": 3.66,
       "empathy": 4.56,
-      "overall": 3.75
+      "overall": 3.74
     },
     {
       "rank": 4,
       "model": "Kimi-Audio",
       "link": "https://github.com/MoonshotAI/Kimi-Audio",
-      "acoustic": 3.14,
-      "instruction": 2.59,
+      "acoustic": 3.17,
+      "instruction": 2.61,
       "roleplaying": 2.62,
       "empathy": 4.02,
-      "overall": 3.08
+      "overall": 3.11
     },
     {
       "rank": 5,
       "model": "Qwen2.5-Omni",
       "link": "https://github.com/QwenLM/Qwen2.5-Omni",
-      "acoustic": 2.29,
-      "instruction": 2.35,
-      "roleplaying": 2.41,
+      "acoustic": 2.51,
+      "instruction": 2.33,
+      "roleplaying": 2.39,
       "empathy": 4.65,
-      "overall": 3.03
+      "overall": 2.97
     },
     {
       "rank": 6,
       "model": "Step-Audio",
       "link": "https://github.com/step-audio/step-audio",
-      "acoustic": 2.56,
-      "instruction": 2.27,
-      "roleplaying": 2.88,
+      "acoustic": 2.68,
+      "instruction": 2.26,
+      "roleplaying": 2.87,
       "empathy": 3.89,
-      "overall": 2.94
+      "overall": 2.92
     },
     {
       "rank": 7,
       "model": "Baichuan-Audio",
       "link": "https://github.com/baichuan-inc/Baichuan-Audio",
-      "acoustic": 2.53,
-      "instruction": 1.73,
-      "roleplaying": 2.13,
-      "empathy": 2.87,
+      "acoustic": 2.57,
+      "instruction": 1.71,
+      "roleplaying": 2.12,
+      "empathy": 2.59,
       "overall": 2.25
     }
   ]

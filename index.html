@@ -1742,7 +1742,7 @@
                         </div>
                         
                         <div class="responses-section">
-                            <h4 class="responses-title">Model Responses</h4>
+                            <h4 class="responses-title">Model Responses (Response transcription is transcribed by Whisper.)</h4>
                             ${Array.isArray(sample.responses) ? sample.responses
                         .sort((a, b) => {
                             const scoreA = Number(a.gemini_score);
@@ -1771,7 +1771,7 @@
                                         </div>
                                         <div class="response-content">
                                             <div class="response-text">
-                                                <strong>Response:</strong> ${responseText || ''}
+                                                <strong>Response transcription:</strong> ${responseText || ''}
                                             </div>
                                             <div class="audio-player">
                                                 <label>🎧 Response Audio:</label>

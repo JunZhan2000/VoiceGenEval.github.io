@@ -909,7 +909,7 @@
                 <a href="#overview" class="nav-link">Overview</a>
                 <a href="#leaderboard" class="nav-link">Leaderboard</a>
                 <a href="#samples" class="nav-link">Examples</a>
-                <a href="#submit" class="nav-link">Submit</a>
+                <a href="#submit" class="nav-link">Submission</a>
             </div>
         </div>
     </nav>
@@ -933,11 +933,11 @@
                             <i data-lucide="file-text"></i>
                             Paper
                         </a>
-                        <a href="https://github.com/JunZhan2000" class="link-button">
+                        <a href="https://github.com/alibaba/voice-gen-eval" class="link-button">
                             <i data-lucide="github"></i>
                             Code
                         </a>
-                        <a href="https://huggingface.co/datasets/your-dataset" class="link-button">
+                        <a href="https://huggingface.co/datasets/zhanjun/VoiceGenEval" class="link-button">
                             <i data-lucide="database"></i>
                             Dataset
                         </a>
@@ -989,7 +989,7 @@
         <!-- 样本展示部分 -->
         <section id="samples" class="samples-section">
             <div class="container">
-                <h2 class="section-title">Example Instructions</h2>
+                <h2 class="section-title">Examples</h2>
                 
                 <!-- 语言选择器 -->
                 <div class="language-tabs" style="margin-bottom: var(--spacing-md);">
@@ -1039,7 +1039,7 @@
                     </p>
                     <p class="submit-instructions">
                         Join the VoiceGenEval leaderboard! Check out our 
-                        <a href="https://github.com/JunZhan2000/VoiceGenEval" class="submit-link" target="_blank">Evaluation Guide</a> 
+                        <a href="https://github.com/alibaba/voice-gen-eval" class="submit-link" target="_blank">Evaluation Guide</a> 
                         to get started.
                     </p>
                     <p class="submit-details">
@@ -1062,8 +1062,8 @@
                     <h4>Resources</h4>
                     <ul>
                         <li><a href="https://arxiv.org/abs/your-paper-id">Paper</a></li>
-                        <li><a href="https://github.com/JunZhan2000/VoiceGenEval">GitHub Repository</a></li>
-                        <li><a href="https://huggingface.co/datasets/your-username/VoiceGenEval">Dataset (HuggingFace)</a></li>
+                        <li><a href="https://github.com/alibaba/voice-gen-eval">GitHub Repository</a></li>
+                        <li><a href="https://huggingface.co/datasets/zhanjun/VoiceGenEval">Dataset (HuggingFace)</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -1805,8 +1805,8 @@
             console.log('Loaded samples:', samplesData.length, 'language:', currentSampleLanguage);
             
             // 每次切换语言后，重置为默认选择
-            currentMainCategory = 'Instruction';
-            currentSubCategory = 'conversion';
+            currentMainCategory = 'Role-Playing';
+            currentSubCategory = 'Character';
             renderMainCategoryButtons();
             renderSubCategoryButtons();
 

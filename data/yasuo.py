@@ -117,7 +117,7 @@ def convert_wav_to_mp3(src_root, dst_root, max_workers=None):
 
 if __name__ == "__main__":
     # 源文件夹路径（包含音频文件）
-    source_folder = "/Users/zhanjun/Documents/papers/VoiceGenEval/VoiceGenEval.github.io/data/examples_wav"
+    source_folder = "/Users/zhanjun/Documents/papers/VoiceGenEval/VoiceGenEval.github.io/data/examples_old"
     # 目标文件夹路径（用于保存 mp3 文件）
     target_folder = "/Users/zhanjun/Documents/papers/VoiceGenEval/VoiceGenEval.github.io/data/examples"
     
